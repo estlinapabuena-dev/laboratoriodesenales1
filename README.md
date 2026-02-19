@@ -70,4 +70,81 @@ plt.show()
 <p align="center">
 <img width="758" height="540" alt="señal11" src="https://github.com/user-attachments/assets/a300c2d4-4562-4c9f-bf4d-69e2726b4d73" />
 
+## Interpretación de la gráfica
+
+La gráfica anterior muestra un segmento de la señal fisiológica descargada desde la base de datos **PhysioNet**.  
+
+- En el **eje X** se representa el tiempo (segundos).  
+- En el **eje Y** se muestra el voltaje (microvoltios).  
+
+Se observan **picos pronunciados** que corresponden a los **complejos QRS** del electrocardiograma, los cuales presentan una amplitud considerable en comparación con el resto de la señal.  
+
+Entre los picos, se distinguen zonas de menor variación que representan las **ondas P y T**.  
+
+Asimismo, se evidencia la presencia de **ruido** y variaciones irregulares en la línea base, lo cual es característico de señales biomédicas reales. Este ruido puede deberse a factores externos, **interferencias eléctricas** o **movimiento del paciente**. 
+### Resultado: Señal fisiológica descargada
+
+La gráfica corresponde a un segmento de una señal electrocardiográfica (ECG) obtenida desde la base de datos PhysioNet.  
+El archivo fue descargado, subido a Google Drive y cargado en Python, donde fue almacenado en la variable **señal1**.  
+
+Dado que la señal original contenía una gran cantidad de muestras, se realizó un ajuste de los ejes para **ampliar una ventana específica** y facilitar la visualización de las ondas características.  
+
+En la figura se observan claramente los complejos QRS, con amplitudes que alcanzan valores cercanos a **±1500 µV**. Entre los picos principales se identifican segmentos isoeléctricos con variaciones menores, lo que corresponde al comportamiento normal de la señal entre cada latido.  
+## Análisis estadístico de la señal
+A partir de la señal fisiológica importada, se calcularon los principales estadísticos descriptivos.
+La media permitió identificar el valor promedio de la señal, mientras que la desviación estándar mostró el grado de dispersión de los datos.
+El coeficiente de variación se utilizó para normalizar dicha dispersión y facilitar la comparación con otras señales.
+El histograma permitió visualizar la distribución de las amplitudes de la señal.
+La asimetría (skewness) permitió identificar si la distribución de los valores se encuentra inclinada hacia uno de los extremos, lo cual es coherente con la presencia de picos de gran amplitud asociados a los complejos QRS.
+Finalmente, la curtosis permitió analizar el grado de concentración de los valores alrededor de la media y la presencia de valores extremos.
+
+# Media de la señal
+media = np.mean(señal1)
+print(f"Media = {media}")
+
+# Desviación estándar (muestral)
+desviacion_muestra = np.std(señal1, ddof=1)
+print(f"Desviación estándar de la muestra = {desviacion_muestra}")
+
+# Coeficiente de variación
+coeficiente_variacion = np.std(señal1, ddof=0) / np.mean(señal1) * 100
+print(f"Coeficiente de variación = {coeficiente_variacion}")
+
+# Histograma
+plt.hist(señal1, bins=100)
+plt.title("Histograma de ECG")
+plt.xlabel("Voltaje (µV)")
+plt.ylabel("Frecuencia")
+plt.grid()
+plt.show()
+
+# Función de probabilidad (KDE)
+data = np.ravel(señal1)
+
+kde = gaussian_kde(data)
+x_vals = np.linspace(min(data), max(data), 1000)
+
+plt.plot(x_vals, kde(x_vals))
+plt.xlabel("Valor de la señal")
+plt.ylabel("Densidad de probabilidad")
+plt.title("Estimación de densidad (KDE) de señal1")
+plt.grid()
+plt.show()
+
+# Asimetría (skewness) 
+n = len(senal1)
+asimetria = np.sum(((senal1 - media) / desviacion_muestra)**3) / n
+print(f"Asimetría (manual) = {asimetria}")
+
+asimetria_funcion = skew(senal1)
+print(f"Asimetría (función) = {asimetria_funcion}")
+
+# Curtosis
+curtosis = np.sum(((señal1 - media) / desviacion_muestra)**4) / n
+print(f"Curtosis = {curtosis}")
+
+
+## Resultados del analisis estadisticos sin funciones
+
+### Resultados numéricos
 
