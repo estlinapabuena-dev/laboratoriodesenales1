@@ -445,8 +445,6 @@ Ruido tipo Artefacto: 29.22 dB
 El ruido de impulso fue el que más degradó la señal, mientras que el ruido tipo artefacto presentó el mayor SNR, conservando mejor la morfología general del ECG.
 
 # DIAGRAMAS DE FLUJO
-## Parte A – Análisis estadístico de la señal (PhysioNet)
-<p align="center"> <img width="960" height="1280" alt="Diagrama de flujo Parte A" src="LINK_DE_TU_IMAGEN_PARTE_A" /> </p>
 
 ## REFERENCIAS
 
