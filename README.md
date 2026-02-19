@@ -294,6 +294,10 @@ plt.grid(True)
 plt.show()
 ``` </pre>
 
+## Resultados, gráfica de la señal 
+<p align="center">
+<img width="1068" height="486" alt="Captura de pantalla 2025-08-16 235352" src="https://github.com/user-attachments/assets/d1032b27-280d-48b5-b40d-6c9eb0e07bab" />
+   
 ### Resultados estadísticos – Parte B (con funciones)
 
 - **Media:** 1.219676066378888
@@ -301,6 +305,14 @@ plt.show()
 - **Coeficiente de variación:** 0.3289172660782452
 - **Asimetría (función):** 1.86
 - **Curtosis:** 4.689155028469519
+
+## Histograma
+<p align="center">
+<img width="692" height="556" alt="Captura de pantalla 2025-08-16 235301" src="https://github.com/user-attachments/assets/16286fc9-2c26-4497-b59e-bed6386c8aea" />
+
+## Función de probabilidad
+<p align="center">
+<img width="863" height="488" alt="Captura de pantalla 2025-08-16 235421" src="https://github.com/user-attachments/assets/4a3b16be-dd19-4d60-9b0b-ba242ce5cc8d" />
 
   ### Análisis estadístico de la señal – Sin funciones
 <pre> ```
@@ -399,6 +411,10 @@ plt.grid(True)
 plt.show()
 ``` </pre>
 
+## Gráfica ruido Gaussiano
+<p align="center">
+<img width="649" height="296" alt="image" src="https://github.com/user-attachments/assets/e0237c14-ae98-4fad-9acd-123d555c7e7d" />
+
 ### 2. Ruido de Impulso
 <pre> ```
 ruido_impulso = np.zeros(len(senal))
@@ -417,6 +433,11 @@ plt.ylabel("Amplitud")
 plt.grid(True)
 plt.show()
 ``` </pre>
+
+## Gráfica ruido impulso
+<p align="center">
+<img width="652" height="297" alt="image" src="https://github.com/user-attachments/assets/c695c258-ce32-4ab3-91f7-a48384abfe00" />
+
 
 ### 3. Ruido tipo Artefacto
 <pre> ```
@@ -441,6 +462,11 @@ Ruido Gaussiano: 24.22 dB
 Ruido de Impulso: 14.32 dB
 Ruido tipo Artefacto: 29.22 dB
 ``` </pre>
+
+## Gráfica del ruido tipo artefacto
+<p align="center">
+<img width="1302" height="599" alt="image" src="https://github.com/user-attachments/assets/e8b3dbe1-b3c9-4932-a647-b32552ee131e" />
+
 
 El ruido de impulso fue el que más degradó la señal, mientras que el ruido tipo artefacto presentó el mayor SNR, conservando mejor la morfología general del ECG.
 
