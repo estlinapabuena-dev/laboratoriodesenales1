@@ -89,7 +89,8 @@ El archivo fue descargado, subido a Google Drive y cargado en Python, donde fue 
 
 Dado que la señal original contenía una gran cantidad de muestras, se realizó un ajuste de los ejes para **ampliar una ventana específica** y facilitar la visualización de las ondas características.  
 
-En la figura se observan claramente los complejos QRS, con amplitudes que alcanzan valores cercanos a **±1500 µV**. Entre los picos principales se identifican segmentos isoeléctricos con variaciones menores, lo que corresponde al comportamiento normal de la señal entre cada latido.  
+En la figura se observan claramente los complejos QRS, con amplitudes que alcanzan valores cercanos a **±1500 µV**. Entre los picos principales se identifican segmentos isoeléctricos con variaciones menores, lo que corresponde al comportamiento normal de la señal entre cada latido. 
+
 ## Análisis estadístico de la señal
 A partir de la señal fisiológica importada, se calcularon los principales estadísticos descriptivos.
 La media permitió identificar el valor promedio de la señal, mientras que la desviación estándar mostró el grado de dispersión de los datos.
@@ -98,53 +99,115 @@ El histograma permitió visualizar la distribución de las amplitudes de la señ
 La asimetría (skewness) permitió identificar si la distribución de los valores se encuentra inclinada hacia uno de los extremos, lo cual es coherente con la presencia de picos de gran amplitud asociados a los complejos QRS.
 Finalmente, la curtosis permitió analizar el grado de concentración de los valores alrededor de la media y la presencia de valores extremos.
 
-# Media de la señal
+### Código – Estadísticos con funciones
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import skew, gaussian_kde
+
+# Media
 media = np.mean(señal1)
 print(f"Media = {media}")
 
 # Desviación estándar (muestral)
 desviacion_muestra = np.std(señal1, ddof=1)
-print(f"Desviación estándar de la muestra = {desviacion_muestra}")
+print(f"Desviación estándar = {desviacion_muestra}")
 
 # Coeficiente de variación
-coeficiente_variacion = np.std(señal1, ddof=0) / np.mean(señal1) * 100
+coeficiente_variacion = np.std(señal1, ddof=0) / media * 100
 print(f"Coeficiente de variación = {coeficiente_variacion}")
 
+# Asimetría (skewness)
+asimetria_funcion = skew(señal1)
+print(f"Asimetría (función) = {asimetria_funcion}")
+
+# Curtosis
+n = len(señal1)
+curtosis = np.sum(((señal1 - media) / desviacion_muestra)**4) / n
+print(f"Curtosis = {curtosis}")
+
 # Histograma
+plt.figure(figsize=(8,4))
 plt.hist(señal1, bins=100)
-plt.title("Histograma de ECG")
-plt.xlabel("Voltaje (µV)")
+plt.title("Histograma de la señal ECG")
+plt.xlabel("Voltaje (mV)")
 plt.ylabel("Frecuencia")
-plt.grid()
+plt.grid(True)
 plt.show()
 
 # Función de probabilidad (KDE)
 data = np.ravel(señal1)
-
 kde = gaussian_kde(data)
 x_vals = np.linspace(min(data), max(data), 1000)
 
+plt.figure(figsize=(8,4))
 plt.plot(x_vals, kde(x_vals))
+plt.title("Función de probabilidad (KDE)")
 plt.xlabel("Valor de la señal")
 plt.ylabel("Densidad de probabilidad")
-plt.title("Estimación de densidad (KDE) de señal1")
-plt.grid()
+plt.grid(True)
 plt.show()
 
-# Asimetría (skewness) 
-n = len(senal1)
-asimetria = np.sum(((senal1 - media) / desviacion_muestra)**3) / n
-print(f"Asimetría (manual) = {asimetria}")
+### Resultados del análisis estadístico
+- **Media:** 0.21505595733362035
+- **Desviación estándar:** 461.2037350921682
+- **Coeficiente de variación:** 214457.54777615666
+- **Asimetría (función):** 1.86
+- **Curtosis:** 122.85882529006771
 
-asimetria_funcion = skew(senal1)
-print(f"Asimetría (función) = {asimetria_funcion}")
+## Resultados del análisis estadísticos
+## Histograma
+<p align="center"> <img width="686" height="560" alt="Captura de pantalla 2025-08-16 001720" src="https://github.com/user-attachments/assets/c63a407c-0d26-4663-a75c-06a09b496e3f" /> </p>
+
+## Función de probabilidad
+<p align="center"> <img width="731" height="555" alt="Captura de pantalla 2025-08-17 001331" src="https://github.com/user-attachments/assets/bc471a6b-8ea3-471d-bd55-a811e72b6415" /> </p>
+
+## Análisis estadístico de la señal sin funciones
+En esta sección se implementaron manualmente las fórmulas matemáticas de los estadísticos descriptivos, sin utilizar funciones predefinidas de librerías estadísticas.
+
+### Código – Estadísticos sin funciones
+
+import math
+import matplotlib.pyplot as plt
+
+senal = list(señal1)
+n = len(senal)
+
+# Media
+suma = 0
+for x in senal:
+    suma += x
+media = suma / n
+
+# Desviación estándar
+suma_cuadrados = 0
+for x in senal:
+    suma_cuadrados += (x - media)**2
+desv_std = math.sqrt(suma_cuadrados / n)
+
+# Coeficiente de variación
+coef_var = (desv_std / media) * 100
+
+# Asimetría manual
+suma_cubica = 0
+for x in senal:
+    suma_cubica += (x - media)**3
+asimetria_manual = (suma_cubica / n) / (desv_std**3)
 
 # Curtosis
-curtosis = np.sum(((señal1 - media) / desviacion_muestra)**4) / n
-print(f"Curtosis = {curtosis}")
+suma_cuarta = 0
+for x in senal:
+    suma_cuarta += (x - media)**4
+curtosis = (suma_cuarta / n) / (desv_std**4)
 
+# Resultados
+print("Media:", media)
+print("Desviación estándar:", desv_std)
+print("Coeficiente de variación:", coef_var)
+print("Asimetría (manual):", asimetria_manual)
+print("Curtosis:", curtosis)
 
-## Resultados del analisis estadisticos sin funciones
-
+## Resultados del análisis estadísticos sin funciones
 ### Resultados numéricos
+**Asimetría (manual)**: 1.87
+
 
