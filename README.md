@@ -212,4 +212,148 @@ print("Curtosis:", curtosis)
 ### Resultados numéricos
 **Asimetría (manual)**: 1.87
 
+## Análisis de resultados – Parte A
 
+En la Parte A se trabajó con una señal fisiológica de ECG obtenida desde la base de datos PhysioNet.
+Tras su importación en Python y su almacenamiento en la variable señal1, se realizó un recorte de la señal con el fin de mejorar la visualización de sus componentes característicos, dado que la longitud original era demasiado extensa para un análisis gráfico claro.
+
+Posteriormente, se calcularon los estadísticos descriptivos mediante dos enfoques:
+
+Implementación manual de las fórmulas matemáticas.
+
+Uso de funciones predefinidas de librerías como NumPy y SciPy.
+
+Los resultados obtenidos fueron consistentes entre ambos métodos, lo cual valida la correcta implementación de las expresiones matemáticas.
+
+Los valores de **la media y la desviación estándar** mostraron que la señal oscila alrededor de un promedio cercano a cero, con una dispersión significativa asociada a la presencia de los picos característicos de los complejos QRS.
+**El coeficiente de variación** evidenció un alto grado de variabilidad relativa, lo cual es coherente con la naturaleza no estacionaria de las señales biomédicas.
+
+**El histograma** permitió visualizar la distribución de amplitudes, donde la mayor parte de los datos se concentra alrededor de valores cercanos a cero, mientras que los picos de mayor amplitud aparecen con menor frecuencia.
+**La función de probabilidad** confirmó esta tendencia, mostrando que las amplitudes extremas tienen baja probabilidad de ocurrencia.
+
+Finalmente, **la curtosis** indicó que la distribución es más apuntada que una distribución normal estándar, reflejando la presencia de valores extremos propios de la señal ECG.
+Adicionalmente, **el cálculo de la asimetría** evidenció que la distribución presenta una cola más pronunciada hacia valores positivos, lo cual concuerda con la morfología típica de este tipo de señales fisiológicas.
+
+## PARTE B
+
+En la Parte B del laboratorio se realizó la adquisición experimental de una señal fisiológica utilizando un generador de señales biológicas conectado a un DAQ (Data Acquisition System).
+Para la conexión se inició con la lectura manual del equipo, identificando las entradas necesarias para el montaje. Posteriormente, se implementaron dos jumpers: uno para la terminal de tierra (GND) y otro para la entrada analógica (AI – Analog Input), encargada de recibir la señal proveniente del generador.
+
+Una vez asegurada la conexión, se procedió a la instalación del driver correspondiente y a la configuración del software de adquisición. Se estableció la captura de 100 muestras, con el fin de evitar el registro excesivo de datos y obtener una señal clara para el análisis.
+Finalmente, los datos adquiridos se exportaron en formato .csv y se almacenaron para su posterior procesamiento en Google Colab mediante Python.
+
+### Almacenamiento de la señal en variables
+<pre> ```
+tiempo = df.iloc[:, 0].values
+senal2 = df.iloc[:, 1].values
+``` </pre>
+
+### Análisis estadístico de la señal – Con funciones
+<pre> ```
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import kurtosis, skew
+import seaborn as sns
+
+# Gráfica de la señal
+plt.figure(figsize=(10,4))
+plt.plot(senal2)
+plt.title("Señal fisiológica medida en laboratorio")
+plt.xlabel("Muestras")
+plt.ylabel("Amplitud")
+plt.grid(True)
+plt.show()
+
+# Estadísticos
+media = np.mean(senal2)
+desv = np.std(senal2)
+cv = desv / media
+asimetria_func = skew(senal2)
+curt = kurtosis(senal2)
+
+print("Media:", media)
+print("Desviación estándar:", desv)
+print("Coeficiente de variación:", cv)
+print("Asimetría (función):", asimetria_func)
+print("Curtosis:", curt)
+
+# Histograma
+plt.hist(senal2, bins=50, density=True)
+plt.title("Histograma de la señal medida")
+plt.xlabel("Amplitud")
+plt.ylabel("Frecuencia")
+plt.show()
+
+# Función de probabilidad
+plt.figure(figsize=(8,4))
+sns.kdeplot(senal2, fill=True)
+plt.title("Función de probabilidad de la señal")
+plt.xlabel("Amplitud")
+plt.ylabel("Densidad de probabilidad")
+plt.grid(True)
+plt.show()
+``` </pre>
+
+### Resultados estadísticos – Parte B (con funciones)
+
+- **Media:** 1.219676066378888
+- **Desviación estándar:** 0.4011725172544121
+- **Coeficiente de variación:** 0.3289172660782452
+- **Asimetría (función):** 1.86
+- **Curtosis:** 4.689155028469519
+
+  ### Análisis estadístico de la señal – Sin funciones
+  <pre> ```
+     import numpy as np
+import matplotlib.pyplot as plt
+
+n = len(senal2)
+
+# Media
+suma = 0
+for x in senal2:
+    suma += x
+media_manual = suma / n
+
+# Desviación estándar
+suma_cuadrados = 0
+for x in senal2:
+    suma_cuadrados += (x - media_manual)**2
+desv_manual = (suma_cuadrados / (n-1))**0.5
+
+# Coeficiente de variación
+cv_manual = desv_manual / media_manual if media_manual != 0 else float("inf")
+
+# Asimetría
+suma_cubica = 0
+for x in senal2:
+    suma_cubica += (x - media_manual)**3
+asimetria_manual = (suma_cubica / n) / (desv_manual**3)
+
+# Curtosis
+suma_cuarta = 0
+for x in senal2:
+    suma_cuarta += (x - media_manual)**4
+curtosis_manual = (suma_cuarta / n) / (desv_manual**4)
+
+print("Media (manual):", media_manual)
+print("Desviación estándar (manual):", desv_manual)
+print("Coeficiente de variación (manual):", cv_manual)
+print("Asimetría (manual):", asimetria_manual)
+print("Curtosis (manual):", curtosis_manual)
+
+# Histograma
+plt.hist(senal2, bins=50)
+plt.title("Histograma de la señal (manual)")
+plt.xlabel("Amplitud")
+plt.ylabel("Frecuencia")
+plt.grid(True)
+plt.show()
+  ``` </pre>
+
+### Resultados estadísticos – Parte B (sin funciones)
+- **Media (manual):** 1.2196760663788881
+- **Desviación estándar (manual):** 0.40319355028341297
+- **Coeficiente de variación (manual):** 0.33057429050031245
+- **Asimetría (manual):** 1.87
+- **Curtosis (manual):** 7.5361408434029675
