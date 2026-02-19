@@ -472,6 +472,29 @@ El ruido de impulso fue el que más degradó la señal, mientras que el ruido ti
 
 # DIAGRAMAS DE FLUJO
 
+flowchart TD
+    Start[Inicio] --> A1[Parte A: Entrar a PhysioNet, buscar y descargar una señal fisiológica (e.g., ECG)]
+    A1 --> A2[Importar la señal en Python y graficarla\n(Usar Spyder, Google Colab, etc. Recomendado: Anaconda)]
+    A2 --> A3[Calcular estadísticos descriptivos:\n- Manualmente (fórmulas desde cero con loops)\n- Con funciones predefinidas (numpy.mean, std, etc.)\nEstadísticos: Media, Desviación Estándar, Coeficiente de Variación, Histogramas, Asimetría (skewness), Curtosis]
+    A3 --> B1[Parte B: Generar una señal fisiológica similar usando el generador de señales biológicas]
+    B1 --> B2[Capturar la señal usando STM32/Arduino/NI-DAQ y guardarla como .txt o .wfdb / .csv]
+    B2 --> B3[Importar la señal en Python y graficarla]
+    B3 --> B4[Calcular estadísticos descriptivos (similar a Parte A)]
+    B4 --> B5[Comparar resultados obtenidos en Parte A y Parte B]
+    B5 --> C1[Parte C: Investigar qué es la Relación Señal-Ruido (SNR)]
+    C1 --> C2[Usar la misma señal de Parte B]
+    C2 --> C3[Contaminar la señal con ruido Gaussiano y medir SNR]
+    C3 --> C4[Contaminar la señal con ruido Impulso y medir SNR]
+    C4 --> C5[Contaminar la señal con ruido tipo Artefacto y medir SNR]
+    C5 --> Final[Compilar los cuatro ítems y subirlos a GitHub\n(Cada estudiante como colaborador en el repositorio)\nIncluir diagramas de flujo de los códigos generados]
+    Final --> End[Fin]
+    
+
+
+
+
+
+
 ## REFERENCIAS
 
 [1] S. J. Patey and M. Wilson, Processing, storage and display of physiological measurements, Anaesth. Intensive Care Med., vol. 21, no. 5, pp. 261–266, 2020.
