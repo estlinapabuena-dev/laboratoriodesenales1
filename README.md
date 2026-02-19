@@ -357,3 +357,99 @@ plt.show()
 - **Coeficiente de variación (manual):** 0.33057429050031245
 - **Asimetría (manual):** 1.87
 - **Curtosis (manual):** 7.5361408434029675
+
+## Análisis de resultados – Parte B
+
+Al observar la señal registrada experimentalmente, se evidenció un comportamiento más irregular que el observado en la señal descargada desde PhysioNet en la Parte A, lo cual es coherente con el hecho de tratarse de una adquisición real sujeta a ruido e interferencias externas.
+
+Los valores de la media se mantuvieron cercanos a un punto de referencia estable, mientras que la desviación estándar resultó mayor, reflejando una mayor dispersión de los datos.
+El coeficiente de variación confirmó el incremento en la variabilidad relativa de la señal.
+
+La asimetría positiva obtenida tanto por el método manual como por funciones indica que la distribución de la señal presenta una cola hacia valores positivos, asociada a la presencia de picos de mayor amplitud y al ruido inherente al proceso de adquisición.
+Por último, la curtosis evidenció colas más pronunciadas, lo que indica la presencia de valores atípicos en la señal experimental.
+
+## PARTE C – Relación Señal Ruido (SNR)
+
+La Relación Señal-Ruido (SNR) expresa la relación entre la potencia de la señal útil y la potencia del ruido, y se calcula generalmente en decibelios (dB).
+Este parámetro es fundamental para evaluar la calidad de una señal ECG, ya que permite determinar qué tanto el ruido interfiere con la señal de interés.
+
+### Análisis de la señal con adición de ruido
+<pre> ```
+import numpy as np
+import matplotlib.pyplot as plt
+
+def calcular_snr(senal, ruido):
+    return 10 * np.log10(np.sum(senal**2) / np.sum(ruido**2))
+
+senal = senal2
+``` </pre>
+
+### 1. Ruido Gaussiano
+<pre> ```
+ruido_gauss = np.random.normal(0, np.std(senal)*0.2, len(senal))
+senal_gauss = senal + ruido_gauss
+snr_gauss = calcular_snr(senal, ruido_gauss)
+
+plt.figure(figsize=(10,4))
+plt.plot(senal_gauss)
+plt.title(f"Señal con ruido Gaussiano - SNR = {snr_gauss:.2f} dB")
+plt.xlabel("Muestras")
+plt.ylabel("Amplitud")
+plt.grid(True)
+plt.show()
+``` </pre>
+
+### 2. Ruido de Impulso
+<pre> ```
+ruido_impulso = np.zeros(len(senal))
+num_impulsos = int(0.01 * len(senal))
+indices = np.random.choice(len(senal), num_impulsos, replace=False)
+ruido_impulso[indices] = np.max(senal) * np.random.choice([-1, 1], num_impulsos)
+
+senal_impulso = senal + ruido_impulso
+snr_impulso = calcular_snr(senal, ruido_impulso)
+
+plt.figure(figsize=(10,4))
+plt.plot(senal_impulso)
+plt.title(f"Señal con ruido de Impulso - SNR = {snr_impulso:.2f} dB")
+plt.xlabel("Muestras")
+plt.ylabel("Amplitud")
+plt.grid(True)
+plt.show()
+``` </pre>
+
+### 3. Ruido tipo Artefacto
+<pre> ```
+frecuencia_art = 0.01
+ruido_art = 0.5 * np.max(senal) * np.sin(2*np.pi*frecuencia_art*np.arange(len(senal))/len(senal))
+senal_art = senal + ruido_art
+snr_art = calcular_snr(senal, ruido_art)
+
+plt.figure(figsize=(10,4))
+plt.plot(senal_art)
+plt.title(f"Señal con ruido tipo Artefacto - SNR = {snr_art:.2f} dB")
+plt.xlabel("Muestras")
+plt.ylabel("Amplitud")
+plt.grid(True)
+plt.show()
+``` </pre>
+
+### Análisis de resultados – Parte C
+<pre> ```
+=== Relación Señal-Ruido (SNR) ===
+Ruido Gaussiano: 24.22 dB
+Ruido de Impulso: 14.32 dB
+Ruido tipo Artefacto: 29.22 dB
+``` </pre>
+
+El ruido de impulso fue el que más degradó la señal, mientras que el ruido tipo artefacto presentó el mayor SNR, conservando mejor la morfología general del ECG.
+
+## REFERENCIAS
+
+[1] S. J. Patey and M. Wilson, Processing, storage and display of physiological measurements, Anaesth. Intensive Care Med., vol. 21, no. 5, pp. 261–266, 2020.
+
+[2] “El ruido gaussiano.” Disponible en: https://media4.obspm.fr/public/VAU/instrumentacion/observar/analizar/ruido-gaussiano/
+
+[3] L. Sibley, Common carrier transmission, Elsevier, 2002.
+
+[4] Zeto Inc., “How Digital EEG Filters Impact EEG Signal Morphology.” Disponible en: https://zeto-inc.com/blog/eeg-signal-enhancement-digital-eeg-filters/
