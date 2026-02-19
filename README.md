@@ -1,7 +1,7 @@
 # Laboratorio 1 
 **Universidad Militar Nueva Granada**  
 **Asignatura:** Procesamiento Digital de Señales  
-**Estudiantes:** [Lina Marcela Pabuena, ]  
+**Estudiantes:** [Lina Marcela Pabuena,Ralf Steven Castiblanco Solano ]  
 **Fecha:** Febrero 202  
 **Asignatura:** Procesamiento Digital de Señales  
 **Título de la práctica:** Análisis estadístico de la señal 
