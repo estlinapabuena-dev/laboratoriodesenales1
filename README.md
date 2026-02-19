@@ -32,7 +32,7 @@ En esta práctica:
    - **Coeficiente de variación**: relación entre la desviación estándar y la media (porcentaje de variabilidad).
    - **Histograma de la señal**: muestra la distribución de valores de voltaje.
    - **Función de probabilidad**: describe la probabilidad de que la señal tome determinados valores.
--** Asimetría (skewness)**: indica si la distribución de amplitudes está inclinada hacia valores positivos o negativos
+   - **Asimetría (skewness)**: indica si la distribución de amplitudes está inclinada hacia valores positivos o negativos
    - **Curtosis**: mide el grado de concentración de los valores de la señal en torno a la media (si tiene colas más o menos pesadas que una distribución normal).
 
 # Código en Python (Google Colab)
