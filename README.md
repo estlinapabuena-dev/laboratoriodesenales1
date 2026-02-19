@@ -472,7 +472,7 @@ El ruido de impulso fue el que más degradó la señal, mientras que el ruido ti
 
 # DIAGRAMAS DE FLUJO
 
-
+![mermaid-diagram](https://github.com/user-attachments/assets/64b2b6c9-b3a5-4af0-a7aa-38bbb7d57822)
 
 
 
