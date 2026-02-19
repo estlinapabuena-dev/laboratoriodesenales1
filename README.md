@@ -303,8 +303,8 @@ plt.show()
 - **Curtosis:** 4.689155028469519
 
   ### Análisis estadístico de la señal – Sin funciones
-  <pre> ```
-     import numpy as np
+<pre> ```
+import numpy as np
 import matplotlib.pyplot as plt
 
 n = len(senal2)
@@ -349,7 +349,7 @@ plt.xlabel("Amplitud")
 plt.ylabel("Frecuencia")
 plt.grid(True)
 plt.show()
-  ``` </pre>
+``` </pre>
 
 ### Resultados estadísticos – Parte B (sin funciones)
 - **Media (manual):** 1.2196760663788881
