@@ -100,6 +100,7 @@ La asimetría (skewness) permitió identificar si la distribución de los valore
 Finalmente, la curtosis permitió analizar el grado de concentración de los valores alrededor de la media y la presencia de valores extremos.
 
 ### Código – Estadísticos con funciones
+<pre> ```
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import skew, gaussian_kde
@@ -146,7 +147,7 @@ plt.xlabel("Valor de la señal")
 plt.ylabel("Densidad de probabilidad")
 plt.grid(True)
 plt.show()
-
+``` </pre>
 ### Resultados del análisis estadístico
 - **Media:** 0.21505595733362035
 - **Desviación estándar:** 461.2037350921682
@@ -165,7 +166,7 @@ plt.show()
 En esta sección se implementaron manualmente las fórmulas matemáticas de los estadísticos descriptivos, sin utilizar funciones predefinidas de librerías estadísticas.
 
 ### Código – Estadísticos sin funciones
-
+<pre> ```
 import math
 import matplotlib.pyplot as plt
 
@@ -205,6 +206,7 @@ print("Desviación estándar:", desv_std)
 print("Coeficiente de variación:", coef_var)
 print("Asimetría (manual):", asimetria_manual)
 print("Curtosis:", curtosis)
+``` </pre>
 
 ## Resultados del análisis estadísticos sin funciones
 ### Resultados numéricos
