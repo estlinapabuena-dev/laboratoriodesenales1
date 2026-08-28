@@ -380,111 +380,133 @@ El coeficiente de variación confirmó el incremento en la variabilidad relativa
 La asimetría positiva obtenida tanto por el método manual como por funciones indica que la distribución de la señal presenta una cola hacia valores positivos, asociada a la presencia de picos de mayor amplitud y al ruido inherente al proceso de adquisición.
 Por último, la curtosis evidenció colas más pronunciadas, lo que indica la presencia de valores atípicos en la señal experimental.
 
-## PARTE C – Relación Señal Ruido (SNR)
+# PARTE C
 
-La Relación Señal-Ruido (SNR) expresa la relación entre la potencia de la señal útil y la potencia del ruido, y se calcula generalmente en decibelios (dB).
-Este parámetro es fundamental para evaluar la calidad de una señal ECG, ya que permite determinar qué tanto el ruido interfiere con la señal de interés.
+## Relación Señal Ruido (SNR)
 
-### Análisis de la señal con adición de ruido
+Esta relación es entre la amplitud de la señal y la amplitud del ruido. Generalmente está expresada en decibelios y se calcula mediante una sencilla ecuación. Implementar esta ecuación es muy importante para analizar una señal de ECG, en donde el ruido no deseado interfiere con la señal de interés. Cuando esta señal tiene valores muy altos quiere decir que la señal está más presente que el ruido, lo que indica buena calidad de la misma. Si ocurre lo contrario, el ruido domina la señal y los valores son bajos, lo que indica que la señal es de mala calidad [1].
+<p align="center">
+<img width="126" height="34" alt="Ecuación" src="https://github.com/user-attachments/assets/0cd0b9e0-d916-4042-8b5d-a4971bbbd382" />
+
+## Análisis de la señal con adición de ruido y cálculo de la relación señal-ruido (SNR)
+
+Para esta parte del laboratorio se trabajó sobre la señal fisiológica adquirida del generador de señales biológicas de la parte B. Se introdujeron tres tipos de ruido simulado para alterar la señal con el fin de analizar cómo estos afectan sus características estadísticas y la calidad de la extracción de datos. 
+
+Se consideraron tres tipos de ruido o de contaminación:
+
+## RUIDO GAUSSIANO:
+
+Es un tipo de ruido aleatorio que sigue una distribución normal o gaussiana. Se caracteriza por una media y una desviación estándar [2]. 
+
+## 1. Ruido Gaussiano
 <pre> ```
-import numpy as np
-import matplotlib.pyplot as plt
 
-def calcular_snr(senal, ruido):
-    return 10 * np.log10(np.sum(senal**2) / np.sum(ruido**2))
+ruido_gauss = np.random.normal(0, np.std(senal)*0.2, len(senal))  
+senal_gauss = senal + ruido_gauss  
+snr_gauss = calcular_snr(senal, ruido_gauss)  
 
-senal = senal2
-``` </pre>
-
-### 1. Ruido Gaussiano
-<pre> ```
-ruido_gauss = np.random.normal(0, np.std(senal)*0.2, len(senal))
-senal_gauss = senal + ruido_gauss
-snr_gauss = calcular_snr(senal, ruido_gauss)
-
-plt.figure(figsize=(10,4))
-plt.plot(senal_gauss)
-plt.title(f"Señal con ruido Gaussiano - SNR = {snr_gauss:.2f} dB")
-plt.xlabel("Muestras")
-plt.ylabel("Amplitud")
-plt.grid(True)
-plt.show()
-``` </pre>
-
+plt.figure(figsize=(10,4))  
+plt.plot(senal_gauss, color='blue')  
+plt.title(f"Señal con ruido Gaussiano - SNR = {snr_gauss:.2f} dB")  
+plt.xlabel("Muestras")  
+plt.ylabel("Amplitud")  
+plt.grid(True)  
+plt.show()  
+   ``` </pre>
 ## Gráfica ruido Gaussiano
 <p align="center">
 <img width="649" height="296" alt="image" src="https://github.com/user-attachments/assets/e0237c14-ae98-4fad-9acd-123d555c7e7d" />
 
-### 2. Ruido de Impulso
+## Análisis ruido Gaussiano
+
+En esta adición de ruido no se desplazó la línea base y el nivel del ruido escala con la señal. El SNR se calculó con la señal limpia respecto al ruido añadido. Este ECG estaría simulando el ruido de los amplificadores, que son interferencias pequeñas y distribuidas. Se puede apreciar claramente en las ondas P y T, que son de baja amplitud y se ven afectadas. 
+
+El valor resultante del ruido (24.22 dB) indica que la señal inicial del ECG aún es clara, ya que es un valor alto.
+
+## RUIDO IMPULSO:
+
+Se manifiesta en ráfagas breves y de alta amplitud. Se caracteriza por tener picos repentinos que causan una interferencia significativa [3].
+
+## 2. Ruido de Impulso
 <pre> ```
-ruido_impulso = np.zeros(len(senal))
-num_impulsos = int(0.01 * len(senal))
-indices = np.random.choice(len(senal), num_impulsos, replace=False)
-ruido_impulso[indices] = np.max(senal) * np.random.choice([-1, 1], num_impulsos)
 
-senal_impulso = senal + ruido_impulso
-snr_impulso = calcular_snr(senal, ruido_impulso)
+ruido_impulso = np.zeros(len(senal))  
+num_impulsos = int(0.01 * len(senal))   # 1% de muestras con impulsos  
+indices = np.random.choice(len(senal), num_impulsos, replace=False)  
+ruido_impulso[indices] = np.max(senal) * np.random.choice([-1,1], num_impulsos)  
 
-plt.figure(figsize=(10,4))
-plt.plot(senal_impulso)
-plt.title(f"Señal con ruido de Impulso - SNR = {snr_impulso:.2f} dB")
-plt.xlabel("Muestras")
-plt.ylabel("Amplitud")
-plt.grid(True)
-plt.show()
-``` </pre>
+senal_impulso = senal + ruido_impulso  
+snr_impulso = calcular_snr(senal, ruido_impulso)  
+
+plt.figure(figsize=(10,4))  
+plt.plot(senal_impulso, color='red')  
+plt.title(f"Señal con ruido de Impulso - SNR = {snr_impulso:.2f} dB")  
+plt.xlabel("Muestras")  
+plt.ylabel("Amplitud")  
+plt.grid(True)  
+plt.show()  
+   ``` </pre>
 
 ## Gráfica ruido impulso
 <p align="center">
 <img width="652" height="297" alt="image" src="https://github.com/user-attachments/assets/c695c258-ce32-4ab3-91f7-a48384abfe00" />
 
+## Análisis ruido impulso
 
-### 3. Ruido tipo Artefacto
+Debido a los picos se puede ver una anormalidad más fácilmente en una de las muestras. Este ruido podría simular malas conexiones del ECG, por ejemplo, electrodos mal conectados, movimiento brusco de los cables u otros factores. También se puede interpretar como complejos falsos.  
+
+El valor resultante del ruido (14.32 dB) indica que el ruido está más presente en la señal. Este ECG está bastante afectado por los picos tan abruptos que generan complejos falsos o falsos eventos eléctricos del corazón. 
+
+## RUIDO ARTEFACTO:
+
+Este ruido es una perturbación no deseada causada por factores externos que pueden ser biológicos, electrónicos o generados por el mismo sistema de adquisición. En el ECG puede deberse a la actividad muscular, al parpadeo o a la interferencia electromagnética del entorno [4].
+
+## 3. Ruido tipo Artefacto
+
 <pre> ```
-frecuencia_art = 0.01
-ruido_art = 0.5 * np.max(senal) * np.sin(2*np.pi*frecuencia_art*np.arange(len(senal))/len(senal))
-senal_art = senal + ruido_art
-snr_art = calcular_snr(senal, ruido_art)
 
-plt.figure(figsize=(10,4))
-plt.plot(senal_art)
-plt.title(f"Señal con ruido tipo Artefacto - SNR = {snr_art:.2f} dB")
-plt.xlabel("Muestras")
-plt.ylabel("Amplitud")
-plt.grid(True)
-plt.show()
-``` </pre>
+# (simulado con ondas senoidales lentas + un offset)
 
-### Análisis de resultados – Parte C
-<pre> ```
-=== Relación Señal-Ruido (SNR) ===
-Ruido Gaussiano: 24.22 dB
-Ruido de Impulso: 14.32 dB
-Ruido tipo Artefacto: 29.22 dB
-``` </pre>
+frecuencia_art = 0.01  
+ruido_art = 0.5*np.max(senal) * np.sin(2*np.pi*frecuencia_art*np.arange(len(senal))/len(senal))  
+senal_art = senal + ruido_art  
+snr_art = calcular_snr(senal, ruido_art)  
+
+plt.figure(figsize=(10,4))  
+plt.plot(senal_art, color='green')  
+plt.title(f"Señal con ruido tipo Artefacto - SNR = {snr_art:.2f} dB")  
+plt.xlabel("Muestras")  
+plt.ylabel("Amplitud")  
+plt.grid(True)  
+plt.show()  
+   ``` </pre>
 
 ## Gráfica del ruido tipo artefacto
 <p align="center">
 <img width="1302" height="599" alt="image" src="https://github.com/user-attachments/assets/e8b3dbe1-b3c9-4932-a647-b32552ee131e" />
 
+## Análisis del ruido tipo artefacto
 
-El ruido de impulso fue el que más degradó la señal, mientras que el ruido tipo artefacto presentó el mayor SNR, conservando mejor la morfología general del ECG.
+Este ruido tipo artefacto en el código simula una "onda senoidal lenta" que está superpuesta en el ECG original, lo que genera una oscilación de baja frecuencia. Este patrón se podría interpretar como fenómenos respiratorios normales del tórax, impedancia de la piel o desplazamientos del electrodo. En esta gráfica se dificulta la clara identificación de las ondas P y T y se aprecia una modificación en el complejo QRS. Aunque no se distorsiona de forma drástica, sí se compromete el análisis de las tendencias y se genera error en la interpretación clínica, lo cual es importante para el diagnóstico de enfermedades cardíacas.  
 
-# DIAGRAMAS DE FLUJO
+Respecto al ruido resultante (29.22 dB), este es el mejor comparado con los dos anteriores, porque quiere decir que la señal está más presente que el ruido. La morfología del ECG no cambia de manera drástica aunque la línea base esté afectada.  
 
-![mermaid-diagram](https://github.com/user-attachments/assets/64b2b6c9-b3a5-4af0-a7aa-38bbb7d57822)
+## Análisis de los resultados - Parte C
 
+Esta simulación permitió observar cómo el ruido degrada la calidad de la señal según sus características estadísticas. También permitió identificar de qué tipo de ruido se trata para tener precaución en futuros análisis de señales electrocardiográficas. Resultados finales:
+<pre>
+   === Relación Señal-Ruido (SNR) ===
+Ruido Gaussiano: 24.22 dB
+Ruido de Impulso: 14.32 dB
+Ruido tipo Artefacto: 29.22 dB
+</pre>
 
+# REFERENCIAS
 
+[1] S. J. Patey and M. Wilson, “Processing, storage and display of physiological measurements,” Anaesth. Intensive Care Med., vol. 21, no. 5, pp. 261–266, May 2020, doi: 10.1016/j.mpaic.2020.03.001. [Accedido: 17-ago-2025]
 
+[2] “El ruido gaussiano.”. Disponible en: (https://media4.obspm.fr/public/VAU/instrumentacion/observar/analizar/ruido-gaussiano/) [Accedido: 18-ago-2025].
 
+[3] L. Sibley, “Common carrier transmission,” in Elsevier eBooks, 2002, pp. 18–38, doi: 10.1016/b978-075067291-7/50040-6.[Accedido: 18-ago-2025]
 
-## REFERENCIAS
-
-[1] S. J. Patey and M. Wilson, Processing, storage and display of physiological measurements, Anaesth. Intensive Care Med., vol. 21, no. 5, pp. 261–266, 2020.
-
-[2] “El ruido gaussiano.” Disponible en: https://media4.obspm.fr/public/VAU/instrumentacion/observar/analizar/ruido-gaussiano/
-
-[3] L. Sibley, Common carrier transmission, Elsevier, 2002.
-
-[4] Zeto Inc., “How Digital EEG Filters Impact EEG Signal Morphology.” Disponible en: https://zeto-inc.com/blog/eeg-signal-enhancement-digital-eeg-filters/
+[4] Zeto Inc., “How Digital EEG Filters Impact EEG Signal Morphology,” *Zeto Inc. Blog*, [En línea]. Disponible en: https://zeto-inc.com/blog/eeg-signal-enhancement-digital-eeg-filters/. [Accedido: 18-ago-2025].
